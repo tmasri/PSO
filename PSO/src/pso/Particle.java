@@ -46,7 +46,7 @@ public class Particle {
         
         // vi(t+1) = wvi(t) + c1r1(y(t)(bestX) - xi(t)(currentX)) + c2r2(y'(t)(globalBestX) - xi(t)(currentX))
         // wvi(t)
-        double[] oldVel = this.velocity.clone();
+        double[] oldVel = this.velocity;
         for (int i = 0; i < this.size; i++)
             oldVel[i] *= inertia;
         
@@ -111,7 +111,7 @@ public class Particle {
     
     public void printPosition() {
         System.out.print("(");
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < this.size; i++)
             System.out.print(this.position[i] + ", ");
         System.out.println(")");
     }
