@@ -29,9 +29,6 @@ public class PSO {
             particles.add(particle);
         }
         
-//        for (int i = 0; i < n; i++)
-//            particles.get(i).printPosition();
-        
         // do updates
         double pFitness;
         boolean inBounds = true;
@@ -45,16 +42,12 @@ public class PSO {
             }
             System.out.println("DONE EVALUATING FITNESS FOR THIS RUN");
             
-            // when you want to pass an array from one class
-            // to another is it better to clone it or should
-            // you just pass it
-            
             // go through particles
             for (int j = 0; j < n; j++) {
                 if (particles.get(j).getBestFit() < globalFitness) {
                     if (inBound(particles.get(j).getPosition())) {
                         System.out.println("in bounds");
-                        globalPos = particles.get(j).getPos();
+                        globalPos = particles.get(j).getPosition();
                         globalFitness = particles.get(j).getBestFit();
                     } else {
                         System.out.println("not in bounds");
@@ -63,19 +56,11 @@ public class PSO {
                     System.out.println(particles.get(j).getFitness() + " is not better than global " + globalFitness);
                 }
             }
-//            System.out.println("global best = " + globalFitness);
-//            for (int j = 0; j < particles.size(); j++)
-//                particles.get(j).getPersonalBest();
             
             for (int j = 0; j < particles.size(); j++) {
                 // update velocity
-//                System.out.println("updating velocity");
                 particles.get(j).updateVelocity(W, C1, C2, globalPos, generate(1), generate(1));
             }
-            
-            // this should print every iteration
-//            for (int j = 0; j < n; j++)
-//                particles.get(j).printPosition();
             
             System.out.println("");
             System.out.println("");

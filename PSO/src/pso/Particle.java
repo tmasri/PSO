@@ -105,7 +105,7 @@ public class Particle {
     }
     
     public double[] getPosition() {
-        return this.position;
+        return this.position.clone();
     }
     
     public int size() {
@@ -118,10 +118,6 @@ public class Particle {
     
     public double getBestFit() {
         return this.bestFit;
-    }
-    
-    public double[] getPos() {
-        return this.position;
     }
     
     public double[] getVel() {
