@@ -30,18 +30,27 @@ public class PSO {
         
         // do updates
         double pFitness;
+        boolean inBounds = true;
         globalVel = particles.get(0).getVel();
+        globalFitness = 9999;
         for (int i = 0; i < 500; i++) {
             for (int j = 0; j < particles.size(); j++) {
-                // run through the equation that she gave us in the assignment
+                // calculate fitness
                 particles.get(j).evaluateFitness();
             }
             
             for (int j = 0; j < n; j++) {
-                pFitness = particles.get(j).getFitness();
-                if (pFitness < globalFitness && (pFitness >= -5.12 || pFitness <= 5.12)) {
-                    globalFitness = particles.get(j).getFitness();
-                    globalVel = particles.get(j).getPosition();
+                if (particles.get(j).getFitness() < globalFitness) {
+                    for (int k = 0; k < particles.get(j).size(); k++) {
+                        if (outsideBounds(j,k)) {
+                            System.out.println("out");
+                            inBounds = false;
+                        }
+                    }
+                    if (inBounds) {
+                        globalVel = particles.get(j).getVel();
+                        globalFitness = particles.get(j).getFitness();
+                    }
                 }
             }
             
@@ -49,8 +58,7 @@ public class PSO {
 //                particles.get(j).getPersonalBest();
             
             for (int j = 0; j < particles.size(); j++) {
-                // run through the equation on the slides
-                
+                // update velocity
                 particles.get(j).updateVelocity(W, C1, C2, globalVel, generate(n, range), generate(n, range));
             }
             
@@ -63,6 +71,10 @@ public class PSO {
         }
         
         
+    }
+    
+    private boolean outsideBounds(int i, int j) {
+        return particles.get(i).seek(j) >= -5.12 && particles.get(i).seek(j) <= 5.12;
     }
     
     public double[] generate(int n, double range) {

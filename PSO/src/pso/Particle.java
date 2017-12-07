@@ -85,6 +85,14 @@ public class Particle {
         
     }
     
+    public double seek(int i) {
+        return this.position[i];
+    }
+    
+    public int size() {
+        return this.size;
+    }
+    
     public double getFitness() {
         return this.bestFitness;
     }
