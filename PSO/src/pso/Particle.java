@@ -2,10 +2,15 @@ package pso;
 
 public class Particle {
     
-    private double[] position = new double[30];
+    // position
+    private double[] position; // current
+    private double[] bestPos; // best
+    
+    // fitness
+    private double fitness; // current
+    private double bestFit; // best
+    
     private double[] velocity;
-    private double[] bestPos;
-    private double bestFitness;
     private int size;
     
     public Particle(double[] pos) {
@@ -13,12 +18,14 @@ public class Particle {
         this.velocity = new double[pos.length];
         this.bestPos = new double[pos.length];
         this.size = this.position.length;
-        this.bestFitness = 9999;
+        this.bestFit = Double.MAX_VALUE;
+        this.fitness = 0;
     }
     
     public void evaluateFitness() {
-        double pos, cos, sum;
+        double pos, cos, sum, total;
         sum = 0;
+        
         for (int i = 0; i < this.position.length; i++) {
             // equation for sum
             pos = this.position[i];
@@ -32,11 +39,14 @@ public class Particle {
             
         }
         
-        pos = (10 * this.position.length) + sum;
-        if (pos < this.bestFitness) {
-            this.bestFitness = pos;
-            this.bestPos = this.position.clone();
+        total = (10 * this.position.length) + sum;
+        if (total < this.bestFit) {
+            this.bestFit = total;
+            this.bestPos = this.position;
+            System.out.println("new best fitness is " + total);
         }
+        this.fitness = total;
+        System.out.println("fitness = " + total);
         
 //        System.out.println("Sum is " + pos);
         
@@ -46,6 +56,15 @@ public class Particle {
         
         // vi(t+1) = wvi(t) + c1r1(y(t)(bestX) - xi(t)(currentX)) + c2r2(y'(t)(globalBestX) - xi(t)(currentX))
         // wvi(t)
+        
+        System.out.println("velocity: ");
+        System.out.print("(");
+        for (int i = 0; i < this.size; i++) {
+            System.out.print(this.velocity[i] + ", ");
+        }
+        System.out.println(")");
+        
+        // inertia applies a portion (w) of the previous velocity to the current velocity
         double[] oldVel = this.velocity;
         for (int i = 0; i < this.size; i++)
             oldVel[i] *= inertia;
@@ -78,15 +97,15 @@ public class Particle {
         // c2 -> social component --> between 0 and 2
         //      - high social component gives more socially aware particles
         // vi(t+1) = wvi(t) + cognitive term(local/personal) + social term(global)
-        
+                    
         // best = personal best position in 30 dimensional space?
         // globalBest = global best position in 30 dimensional space
         // current = the particles current position
         
     }
     
-    public double seek(int i) {
-        return this.position[i];
+    public double[] getPosition() {
+        return this.position;
     }
     
     public int size() {
@@ -94,10 +113,14 @@ public class Particle {
     }
     
     public double getFitness() {
-        return this.bestFitness;
+        return this.fitness;
     }
     
-    public double[] getPosition() {
+    public double getBestFit() {
+        return this.bestFit;
+    }
+    
+    public double[] getPos() {
         return this.position;
     }
     
@@ -106,7 +129,7 @@ public class Particle {
     }
     
     public void getPersonalBest() {
-        System.out.println("Personal best is: " + this.bestFitness);
+        System.out.println("Personal best is: " + this.bestFit);
     }
     
     public void printPosition() {
