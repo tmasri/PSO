@@ -9,7 +9,8 @@ public class PSO {
     Random rand;
     private double globalFitness;
     private double[] globalPos;
-    private int n = 30;
+    private int swarmSize = 30;
+    private int dimensions = 30;
     
     private static final double W = 0.729844;
     private static final double C1 = 1.496180;
@@ -24,7 +25,7 @@ public class PSO {
         double range = (5.12 - (-5.12)) - 5.12;
         
         // generate n random particles
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < swarmSize; i++) {
             particle = new Particle(generate(range));
             particles.add(particle);
         }
@@ -48,33 +49,30 @@ public class PSO {
             
 //            System.out.println("DONE EVALUATING FITNESS FOR THIS RUN");
             
+            // update neighborhood best position
             // go through particles
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < swarmSize; j++) {
                 if (particles.get(j).getBestFit() < globalFitness) {
                     if (inBound(particles.get(j).getPosition())) {
-//                        System.out.println("in bounds");
                         globalPos = particles.get(j).getPosition();
                         globalFitness = particles.get(j).getBestFit();
-                    } else {
-//                        System.out.println("not in bounds");
+                        System.out.println("New global best fitness is " + globalFitness);
                     }
-                } else {
-//                    System.out.println(particles.get(j).getFitness() + " is not better than global " + globalFitness);
                 }
             }
+            
+            
+            
             
             for (int j = 0; j < particles.size(); j++) {
                 // update velocity
                 particles.get(j).updateVelocity(W, C1, C2, globalPos, generate(1), generate(1));
             }
-            
-//            System.out.println("");
-//            System.out.println("");
 
         }
 
         
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < swarmSize; i++) {
             System.out.println("Fitness = " + particles.get(i).getFitness());
         }
         System.out.println("global best = " + globalFitness);
@@ -84,6 +82,7 @@ public class PSO {
     
     private boolean inBound(double[] position) {
         
+        // check if particle is out of bounds
         for (int i = 0; i < 30; i++)
             if (position[i] < -5.12 || position[i] > 5.12)
                 return false;
@@ -93,7 +92,7 @@ public class PSO {
     
     public double[] generate(double r) {
         
-        double[] position = new double[n];
+        double[] position = new double[dimensions];
         
         for (int i = 0; i < 30; i++)
             position[i] = Math.random() * r;
