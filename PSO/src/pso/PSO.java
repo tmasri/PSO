@@ -11,9 +11,9 @@ public class PSO {
     private double[] globalPos;
     private int n = 30;
     
-    private static final double W = 0.4;
-    private static final double C1 = 1.2;
-    private static final double C2 = 1.2;
+    private static final double W = 0.729844;
+    private static final double C1 = 1.496180;
+    private static final double C2 = 1.496180;
     
     public PSO() {
         
@@ -33,27 +33,33 @@ public class PSO {
         double pFitness;
         boolean inBounds = true;
         globalPos = particles.get(0).getVel();
-        globalFitness = 9999;
-        for (int i = 0; i < 500; i++) {
-            System.out.println("ITERATION " + i);
+        globalFitness = Double.MAX_VALUE;
+        for (int i = 0; i < 5000; i++) {
+            
+            // evaluating fitness
+            // updating personal best position
             for (int j = 0; j < particles.size(); j++) {
                 // calculate fitness
                 particles.get(j).evaluateFitness();
             }
-            System.out.println("DONE EVALUATING FITNESS FOR THIS RUN");
+            
+            
+            
+            
+//            System.out.println("DONE EVALUATING FITNESS FOR THIS RUN");
             
             // go through particles
             for (int j = 0; j < n; j++) {
                 if (particles.get(j).getBestFit() < globalFitness) {
                     if (inBound(particles.get(j).getPosition())) {
-                        System.out.println("in bounds");
+//                        System.out.println("in bounds");
                         globalPos = particles.get(j).getPosition();
                         globalFitness = particles.get(j).getBestFit();
                     } else {
-                        System.out.println("not in bounds");
+//                        System.out.println("not in bounds");
                     }
                 } else {
-                    System.out.println(particles.get(j).getFitness() + " is not better than global " + globalFitness);
+//                    System.out.println(particles.get(j).getFitness() + " is not better than global " + globalFitness);
                 }
             }
             
@@ -62,14 +68,14 @@ public class PSO {
                 particles.get(j).updateVelocity(W, C1, C2, globalPos, generate(1), generate(1));
             }
             
-            System.out.println("");
-            System.out.println("");
+//            System.out.println("");
+//            System.out.println("");
 
         }
 
         
         for (int i = 0; i < n; i++) {
-            System.out.println("Fitness = " + particles.get(i).getBestFit());
+            System.out.println("Fitness = " + particles.get(i).getFitness());
         }
         System.out.println("global best = " + globalFitness);
         
@@ -78,8 +84,8 @@ public class PSO {
     
     private boolean inBound(double[] position) {
         
-        for (int i = 0; i < n; i++)
-            if (position[i] < -5.12 && position[i] > 5.12)
+        for (int i = 0; i < 30; i++)
+            if (position[i] < -5.12 || position[i] > 5.12)
                 return false;
         
         return true;
@@ -89,7 +95,7 @@ public class PSO {
         
         double[] position = new double[n];
         
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < 30; i++)
             position[i] = Math.random() * r;
         
         return position;

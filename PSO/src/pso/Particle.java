@@ -14,25 +14,29 @@ public class Particle {
     private int size;
     
     public Particle(double[] pos) {
+        // current
         this.position = pos.clone();
-        this.velocity = new double[pos.length];
-        this.bestPos = new double[pos.length];
-        this.size = this.position.length;
-        this.bestFit = Double.MAX_VALUE;
         this.fitness = 0;
+        
+        // best
+        this.bestPos = new double[pos.length];
+        this.bestFit = Double.MAX_VALUE;
+        
+        this.velocity = new double[pos.length]; // initializa particle to 0
+        this.size = this.position.length;
     }
     
     public void evaluateFitness() {
-        double pos, cos, sum, total;
+        double pos, cos, sum, total, p;
         sum = 0;
         
         for (int i = 0; i < this.position.length; i++) {
             // equation for sum
-            pos = this.position[i];
-            cos = this.position[i];
+            p = this.position[i]; // position
+//            cos = this.position[i];
             
-            pos *= pos;
-            cos = 10 * Math.cos(2 * Math.PI * cos);
+            pos = p * p; // x^2
+            cos = 10 * Math.cos(2 * Math.PI * p);
             
             pos -= cos;
             sum += pos;
@@ -40,13 +44,15 @@ public class Particle {
         }
         
         total = (10 * this.position.length) + sum;
+        this.fitness = total;
+        
+        // update local best fitness
         if (total < this.bestFit) {
             this.bestFit = total;
-            this.bestPos = this.position;
-            System.out.println("new best fitness is " + total);
+            this.bestPos = this.position.clone();
+//            System.out.println("new best fitness is " + total);
         }
-        this.fitness = total;
-        System.out.println("fitness = " + total);
+//        System.out.println("fitness = " + total);
         
 //        System.out.println("Sum is " + pos);
         
@@ -57,15 +63,15 @@ public class Particle {
         // vi(t+1) = wvi(t) + c1r1(y(t)(bestX) - xi(t)(currentX)) + c2r2(y'(t)(globalBestX) - xi(t)(currentX))
         // wvi(t)
         
-        System.out.println("velocity: ");
-        System.out.print("(");
-        for (int i = 0; i < this.size; i++) {
-            System.out.print(this.velocity[i] + ", ");
-        }
-        System.out.println(")");
+//        System.out.println("velocity: ");
+//        System.out.print("(");
+//        for (int i = 0; i < this.size; i++) {
+//            System.out.print(this.velocity[i] + ", ");
+//        }
+//        System.out.println(")");
         
         // inertia applies a portion (w) of the previous velocity to the current velocity
-        double[] oldVel = this.velocity;
+        double[] oldVel = this.velocity.clone();
         for (int i = 0; i < this.size; i++)
             oldVel[i] *= inertia;
         
@@ -124,7 +130,7 @@ public class Particle {
         return this.velocity;
     }
     
-    public void getPersonalBest() {
+    public void printPersonalBest() {
         System.out.println("Personal best is: " + this.bestFit);
     }
     
