@@ -1,4 +1,4 @@
-package pso;
+//package pso;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,8 +17,8 @@ public class PSO {
     private int dimensions = 30;
     
     private static final double W = 0.729844;
-    private static final double C1 = 1.496180; 
-   private static final double C2 = 1.496180;
+    private static final double C1 = 1.496180;
+    private static final double C2 = 1.496180;
     
     public PSO() {
         
@@ -26,9 +26,10 @@ public class PSO {
 	double rand = Math.random() * 500;
 	BufferedWriter write = null;
         
-        try {
-        
-        write = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("1-" + rand + ".txt"), "UTF-8"));
+	try {
+	
+	write = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("1-" + rand + ".txt"), "UTF-8"));
+	
         // initialize particles
         particles = new ArrayList<Particle>();
         Particle particle;
@@ -70,23 +71,19 @@ public class PSO {
                 // update velocity
                 particles.get(j).updateVelocity(W, C1, C2, globalPos, generate(1), generate(1));
             }
-            
-            for (int j = 0; j < particles.size(); j++) {
-                particles.get(j).move();
-            }
 
         }
-        System.out.println("global best = " + globalFitness);
+	System.out.println("global best = " + globalFitness);
         mean += globalFitness;
-        write.write(""+globalFitness);
+	write.write(""+globalFitness);
 	write.newLine();
 	particles.clear();
         }
         
         System.out.println("Mean: " + (mean/100));
-        System.out.println("File: " + rand +".txt");
+	System.out.println("File: " + rand +".txt");
 	write.write("Mean: " + (mean/100) + "\n");
-        } catch (IOException e) {
+	} catch (IOException e) {
 	} finally {
 		try { write.close(); } catch (Exception e) {}
 	}
@@ -110,7 +107,7 @@ public class PSO {
         
         double[] position = new double[dimensions];
         
-        for (int i = 0; i < position.length; i++)
+        for (int i = 0; i < 30; i++)
             position[i] = Math.random() * r;
         
         return position;

@@ -1,4 +1,4 @@
-package pso;
+//package pso;
 
 public class Particle {
     
@@ -76,12 +76,10 @@ public class Particle {
         for (int i = 0; i < this.size; i++)
             this.velocity[i] = oldVel[i] + cog[i] + soc[i];
         
-    }
-    
-    public void move() {
         // update velocity
         for (int i = 0; i < this.size; i++)
             this.position[i] += this.velocity[i];
+        
     }
     
     public double[] getPosition() {
