@@ -6,34 +6,35 @@ import java.util.Random;
 public class PSO {
 
     ArrayList<Particle> particles;
-    Random rand;
     private double globalFitness;
     private double[] globalPos;
-    private int n = 30;
+    private int swarmSize = 30;
+    private int dimensions = 30;
     
-    private static final double W = 0.729844;
-    private static final double C1 = 1.496180;
-    private static final double C2 = 1.496180;
+    private static final double W = 0.4;
+    private static final double C1 = 1.2;
+    private static final double C2 = 1.2;
     
     public PSO() {
+        
+        double mean = 0;
         
         // initialize particles
         particles = new ArrayList<Particle>();
         Particle particle;
-        rand = new Random();
         double range = (5.12 - (-5.12)) - 5.12;
-        
+        for (int m = 0; m < 100; m++) {
+            System.out.println(m+1);
         // generate n random particles
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < swarmSize; i++) {
             particle = new Particle(generate(range));
             particles.add(particle);
         }
         
         // do updates
-        double pFitness;
-        boolean inBounds = true;
         globalPos = particles.get(0).getVel();
         globalFitness = Double.MAX_VALUE;
+        
         for (int i = 0; i < 5000; i++) {
             
             // evaluating fitness
@@ -43,23 +44,15 @@ public class PSO {
                 particles.get(j).evaluateFitness();
             }
             
-            
-            
-            
-//            System.out.println("DONE EVALUATING FITNESS FOR THIS RUN");
-            
+            // update neighborhood best position
             // go through particles
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < swarmSize; j++) {
                 if (particles.get(j).getBestFit() < globalFitness) {
                     if (inBound(particles.get(j).getPosition())) {
-//                        System.out.println("in bounds");
                         globalPos = particles.get(j).getPosition();
                         globalFitness = particles.get(j).getBestFit();
-                    } else {
-//                        System.out.println("not in bounds");
+//                        System.out.println("New global best fitness is " + globalFitness);
                     }
-                } else {
-//                    System.out.println(particles.get(j).getFitness() + " is not better than global " + globalFitness);
                 }
             }
             
@@ -67,23 +60,21 @@ public class PSO {
                 // update velocity
                 particles.get(j).updateVelocity(W, C1, C2, globalPos, generate(1), generate(1));
             }
-            
-//            System.out.println("");
-//            System.out.println("");
 
         }
-
+        mean += globalFitness;
+        }
         
-        for (int i = 0; i < n; i++) {
-            System.out.println("Fitness = " + particles.get(i).getFitness());
-        }
-        System.out.println("global best = " + globalFitness);
+        System.out.println("Mean: " + (mean/100));
+        
+//        System.out.println("global best = " + globalFitness);
         
         
     }
     
     private boolean inBound(double[] position) {
         
+        // check if particle is out of bounds
         for (int i = 0; i < 30; i++)
             if (position[i] < -5.12 || position[i] > 5.12)
                 return false;
@@ -93,7 +84,7 @@ public class PSO {
     
     public double[] generate(double r) {
         
-        double[] position = new double[n];
+        double[] position = new double[dimensions];
         
         for (int i = 0; i < 30; i++)
             position[i] = Math.random() * r;

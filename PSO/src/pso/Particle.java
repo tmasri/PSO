@@ -33,9 +33,8 @@ public class Particle {
         for (int i = 0; i < this.position.length; i++) {
             // equation for sum
             p = this.position[i]; // position
-//            cos = this.position[i];
             
-            pos = p * p; // x^2
+            pos = p * p;
             cos = 10 * Math.cos(2 * Math.PI * p);
             
             pos -= cos;
@@ -50,11 +49,7 @@ public class Particle {
         if (total < this.bestFit) {
             this.bestFit = total;
             this.bestPos = this.position.clone();
-//            System.out.println("new best fitness is " + total);
         }
-//        System.out.println("fitness = " + total);
-        
-//        System.out.println("Sum is " + pos);
         
     }
     
@@ -63,14 +58,6 @@ public class Particle {
         // vi(t+1) = wvi(t) + c1r1(y(t)(bestX) - xi(t)(currentX)) + c2r2(y'(t)(globalBestX) - xi(t)(currentX))
         // wvi(t)
         
-//        System.out.println("velocity: ");
-//        System.out.print("(");
-//        for (int i = 0; i < this.size; i++) {
-//            System.out.print(this.velocity[i] + ", ");
-//        }
-//        System.out.println(")");
-        
-        // inertia applies a portion (w) of the previous velocity to the current velocity
         double[] oldVel = this.velocity.clone();
         for (int i = 0; i < this.size; i++)
             oldVel[i] *= inertia;
@@ -95,21 +82,6 @@ public class Particle {
         
     }
     
-    public void move(double global) {
-        // updating velocity
-        // w -> applies a portion of the previous velocity to the current velocity --> typically between 0 and 1
-        // c1 -> cognitive component --> between 0 and 2
-        //      - high cognitive component gives more self-aware particles
-        // c2 -> social component --> between 0 and 2
-        //      - high social component gives more socially aware particles
-        // vi(t+1) = wvi(t) + cognitive term(local/personal) + social term(global)
-                    
-        // best = personal best position in 30 dimensional space?
-        // globalBest = global best position in 30 dimensional space
-        // current = the particles current position
-        
-    }
-    
     public double[] getPosition() {
         return this.position.clone();
     }
@@ -128,17 +100,6 @@ public class Particle {
     
     public double[] getVel() {
         return this.velocity;
-    }
-    
-    public void printPersonalBest() {
-        System.out.println("Personal best is: " + this.bestFit);
-    }
-    
-    public void printPosition() {
-        System.out.print("(");
-        for (int i = 0; i < this.size; i++)
-            System.out.print(this.position[i] + ", ");
-        System.out.println(")");
     }
     
 }
