@@ -80,8 +80,9 @@ public class Particle {
     
     public void move() {
         // update velocity
-        for (int i = 0; i < this.size; i++)
-            this.position[i] += this.velocity[i];
+        for (int i = 0; i < this.size; i++) {
+            this.position[i] += this.velocity[i];   
+        }
     }
     
     public double[] getPosition() {

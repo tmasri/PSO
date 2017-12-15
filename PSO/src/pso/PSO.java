@@ -17,79 +17,56 @@ public class PSO {
     private int dimensions = 30;
     
     private static final double W = 0.729844;
-    private static final double C1 = 1.496180; 
-   private static final double C2 = 1.496180;
+    private static final double C1 = 1.496180;
+    private static final double C2 = 1.496180;
     
     public PSO() {
         
-        double mean = 0;
-	double rand = Math.random() * 500;
-	BufferedWriter write = null;
-        
-        try {
-        
-        write = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("1-" + rand + ".txt"), "UTF-8"));
         // initialize particles
         particles = new ArrayList<Particle>();
         Particle particle;
         double range = (5.12 - (-5.12)) - 5.12;
-        for (int m = 0; m < 100; m++) {
-            System.out.println(m+1);
+        
         // generate n random particles
         for (int i = 0; i < swarmSize; i++) {
             particle = new Particle(generate(range));
             particles.add(particle);
         }
         
-        // do updates
+        // initialize global best to the first particle
         globalPos = particles.get(0).getVel();
-        globalFitness = Double.MAX_VALUE;
+        globalFitness = particles.get(0).getBestFit();
         
-        for (int i = 0; i < 5000; i++) {
+        // move particles, update global best
+        for (int i = 0; i < 1000; i++) {
             
             // evaluating fitness
-            // updating personal best position
             for (int j = 0; j < particles.size(); j++) {
                 // calculate fitness
                 particles.get(j).evaluateFitness();
             }
             
             // update neighborhood best position
-            // go through particles
             for (int j = 0; j < swarmSize; j++) {
                 if (particles.get(j).getBestFit() < globalFitness) {
                     if (inBound(particles.get(j).getPosition())) {
                         globalPos = particles.get(j).getPosition();
                         globalFitness = particles.get(j).getBestFit();
-//                        System.out.println("New global best fitness is " + globalFitness);
                     }
                 }
             }
             
+            // update velocity
             for (int j = 0; j < particles.size(); j++) {
-                // update velocity
                 particles.get(j).updateVelocity(W, C1, C2, globalPos, generate(1), generate(1));
             }
             
+            // move particles
             for (int j = 0; j < particles.size(); j++) {
                 particles.get(j).move();
             }
 
         }
-        System.out.println("global best = " + globalFitness);
-        mean += globalFitness;
-        write.write(""+globalFitness);
-	write.newLine();
-	particles.clear();
-        }
-        
-        System.out.println("Mean: " + (mean/100));
-        System.out.println("File: " + rand +".txt");
-	write.write("Mean: " + (mean/100) + "\n");
-        } catch (IOException e) {
-	} finally {
-		try { write.close(); } catch (Exception e) {}
-	}
         
 //        System.out.println("global best = " + globalFitness);
         
@@ -117,8 +94,24 @@ public class PSO {
         
     }
     
-    public static void main(String[] args) {
-        new PSO();
+    public double getGlobalBest() {
+        return this.globalFitness;
     }
     
+    public static void main(String[] args) {
+        
+        double bestPSO = Double.MAX_VALUE;
+        double sum = 0;
+        // have 2 double arrays one for w and one for c
+        
+        for (int i=0; i< 100; i++) {
+            PSO pso = new PSO();
+            bestPSO = Math.min(bestPSO, pso.getGlobalBest());
+            System.out.println((i+1)  + "- Best Fitness: "+bestPSO);
+            sum += bestPSO;
+        }
+        
+        System.out.println("Mean = " + (sum/100));
+ 
+    }
 }
