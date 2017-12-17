@@ -33,7 +33,7 @@ public class PSO {
         globalFitness = particles.get(0).getBestFit();
         
         // move particles, update global best
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 2000; i++) {
             
             for (int j = 0; j < particles.size(); j++) {
                 // calculate fitness
@@ -114,15 +114,13 @@ public class PSO {
     
     public static void main(String[] args) {
         
-        double mean;
-        double sd;
+        double mean, sum;
         ArrayList<Double> best = new ArrayList<Double>();
-        
-        double sum = 0;
         
         for (int i = 0; i < 4; i++) {
             
             System.out.println("TEST " + (i+1));
+            sum = 0;
             
             for (int j=0; j< 100; j++) {
                 PSO pso = new PSO(i);
@@ -139,7 +137,6 @@ public class PSO {
             
             mean = sum/100;
             calculations(mean, best);
-            sum = 0;
             best.clear();
         }
  
