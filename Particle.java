@@ -1,4 +1,3 @@
-//package pso;
 
 public class Particle {
     
@@ -46,40 +45,51 @@ public class Particle {
         this.fitness = total;
         
         // update local best fitness
-        if (total < this.bestFit) {
+        if (total < this.bestFit && inBounds()) {
             this.bestFit = total;
             this.bestPos = this.position.clone();
         }
         
     }
     
+    private boolean inBounds() {
+        
+        // check if particle is out of bounds
+        for (int i = 0; i < 30; i++)
+            if (this.position[i] < -5.12 || this.position[i] > 5.12)
+                return false;
+        
+        return true;
+    }
+    
     public void updateVelocity(double inertia, double cognitive, double social, double[] global, double[] r1, double[] r2) {
         
-        // vi(t+1) = wvi(t) + c1r1(y(t)(bestX) - xi(t)(currentX)) + c2r2(y'(t)(globalBestX) - xi(t)(currentX))
-        // wvi(t)
-        
         double[] oldVel = this.velocity.clone();
-        for (int i = 0; i < this.size; i++)
+        double cog, soc;
+        
+        for (int i = 0; i < this.size; i++) {
+            
+            // wvi(t)
             oldVel[i] *= inertia;
+            
+            // c1r1(y(t) - xi(t))
+            cog = cognitive * r1[i] * (this.bestPos[i] - this.position[i]);
+            
+            // c2r2(y'(t) - xi(t))
+            soc = social * r2[i] * (global[i] - this.position[i]);
+            
+            // update velocity
+            this.velocity[i] = oldVel[i] + cog + soc;
+            
+        }
         
-        // c1r1(y(t) - xi(t))
-        double[] cog = new double[this.size];
-        for (int i = 0; i < this.size; i++)
-            cog[i] = cognitive * r1[i] * (this.bestPos[i] - this.position[i]);
-        
-        // c2r2(y'(t) - xi(t))
-        double[] soc = new double[this.size];
-        for (int i = 0; i < this.size; i++)
-            soc[i] = social * r2[i] * (global[i] - this.position[i]);
-        
-        // vi(t+1) = ...
-        for (int i = 0; i < this.size; i++)
-            this.velocity[i] = oldVel[i] + cog[i] + soc[i];
-        
+    }
+    
+    public void move() {
         // update velocity
-        for (int i = 0; i < this.size; i++)
-            this.position[i] += this.velocity[i];
-        
+        for (int i = 0; i < this.size; i++) {
+            this.position[i] += this.velocity[i];   
+        }
     }
     
     public double[] getPosition() {
