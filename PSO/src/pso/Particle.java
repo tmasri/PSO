@@ -46,11 +46,21 @@ public class Particle {
         this.fitness = total;
         
         // update local best fitness
-        if (total < this.bestFit) {
+        if (total < this.bestFit && inBounds()) {
             this.bestFit = total;
             this.bestPos = this.position.clone();
         }
         
+    }
+    
+    private boolean inBounds() {
+        
+        // check if particle is out of bounds
+        for (int i = 0; i < 30; i++)
+            if (this.position[i] < -5.12 || this.position[i] > 5.12)
+                return false;
+        
+        return true;
     }
     
     public void updateVelocity(double inertia, double cognitive, double social, double[] global, double[] r1, double[] r2) {
